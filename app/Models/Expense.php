@@ -9,6 +9,20 @@ class Expense extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'amount',
+        'recurring',
+        'date'
+    ];
+
+    protected $casts = [
+        'name' => 'string',
+        'amount' => 'decimal:2',
+        'recurring' => 'bool',
+        'date' => 'datetime',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
