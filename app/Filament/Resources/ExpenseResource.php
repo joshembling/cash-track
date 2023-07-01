@@ -2,16 +2,22 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ExpenseResource\Pages;
-use App\Filament\Resources\ExpenseResource\RelationManagers;
-use App\Models\Expense;
+use Closure;
 use Filament\Forms;
-use Filament\Resources\Form;
-use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use App\Models\User;
 use Filament\Tables;
+use App\Models\Expense;
+use App\Models\Category;
+use Filament\Resources\Form;
+use Filament\Resources\Table;
+use Filament\Resources\Resource;
+use Filament\Tables\Filters\Filter;
+use Illuminate\Database\Eloquent\Model;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\ExpenseResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\ExpenseResource\RelationManagers;
 
 class ExpenseResource extends Resource
 {
@@ -23,18 +29,36 @@ class ExpenseResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('user_id')
-                    ->required(),
-                Forms\Components\TextInput::make('category_id')
-                    ->required(),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('amount')
+                    ->prefixIcon('heroicon-o-currency-pound')
                     ->required(),
-                Forms\Components\Toggle::make('recurring'),
-                Forms\Components\DateTimePicker::make('date')
+                Forms\Components\Select::make('category_id')
+                    ->relationship('category', 'name')
+                    ->label('Category')
+                    ->options(Category::all()->pluck('name', 'id'))
                     ->required(),
+                Forms\Components\DatePicker::make('date')
+                    ->required(),
+                Forms\Components\Toggle::make('recurring')
+                    ->reactive(),
+                Forms\Components\Select::make('frequency')
+                    ->options([
+                        'Weekly' => 'Weekly',
+                        'Bi-weekly' => 'Bi-weekly',
+                        'Monthly' => 'Monthly',
+                        'Quarterly' => 'Quarterly',
+                    ])
+                    ->hidden(fn (Closure $get) => !$get('recurring'))
+                    ->required(),
+                Forms\Components\Select::make('tags')
+                    ->relationship('tags', 'name')
+                    ->preload()
+                    ->multiple(),
+                Forms\Components\Hidden::make('user_id')
+                    ->dehydrateStateUsing(fn ($state) => auth()->user()->id),
             ]);
     }
 
@@ -42,37 +66,51 @@ class ExpenseResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user_id'),
-                Tables\Columns\TextColumn::make('category_id'),
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('amount'),
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('Name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('category.name')
+                    ->label('Category')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Expense')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('amount')
+                    ->prefix('£'),
                 Tables\Columns\IconColumn::make('recurring')
                     ->boolean(),
+                Tables\Columns\TextColumn::make('frequency'),
                 Tables\Columns\TextColumn::make('date')
-                    ->dateTime(),
+                    ->date('jS F Y'),
+                Tables\Columns\TextColumn::make('tags.name')
+                    ->searchable()
+                    ->wrap(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime(),
-                Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime(),
             ])
             ->filters([
-                //
+                // TODO
+                // Date by year
+                // Date by month
+                // Date by this week
+                // Category
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -80,5 +118,5 @@ class ExpenseResource extends Resource
             'create' => Pages\CreateExpense::route('/create'),
             'edit' => Pages\EditExpense::route('/{record}/edit'),
         ];
-    }    
+    }
 }

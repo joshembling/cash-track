@@ -13,14 +13,22 @@ class Expense extends Model
         'name',
         'amount',
         'recurring',
-        'date'
+        'frequency',
+        'copied',
+        'date',
+        'user_id',
+        'category_id'
     ];
 
     protected $casts = [
         'name' => 'string',
         'amount' => 'decimal:2',
         'recurring' => 'bool',
+        'copied' => 'bool',
+        'frequency' => 'string',
         'date' => 'datetime',
+        'user_id' => 'int',
+        'category_id' => 'int'
     ];
 
     public function user()
