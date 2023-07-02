@@ -44,6 +44,11 @@ jobs:
         run: composer install --no-dev --prefer-dist --no-interaction --no-progress --no-suggest
         working-directory: ./
 
+      - name: 🗑️ Remove unnecessary directories
+        run: |
+          rm -rf ./laravel_project_directory/tests
+          rm -rf ./laravel_project_directory/vendor
+
       - name: 💡 Optimize Composer Autoload
         run: composer dump-autoload --optimize
         working-directory: ./
