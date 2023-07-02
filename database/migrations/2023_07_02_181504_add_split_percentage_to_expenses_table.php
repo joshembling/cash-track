@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('expenses', function (Blueprint $table) {
-            $table->boolean('split')->after('frequency')->default(0);
+            $table->string('split_percentage', 255)->after('split')->nullable();
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('expenses', function (Blueprint $table) {
-            $table->dropColumn('split');
+            $table->dropColumn('split_percentage');
         });
     }
 };

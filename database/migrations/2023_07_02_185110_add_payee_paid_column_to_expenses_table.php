@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('expenses', function (Blueprint $table) {
-            $table->boolean('split')->after('frequency')->default(0);
+            $table->boolean('payee_paid')->after('payee_id')->default(0);
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('expenses', function (Blueprint $table) {
-            $table->dropColumn('split');
+            $table->dropColumn('payee_paid');
         });
     }
 };

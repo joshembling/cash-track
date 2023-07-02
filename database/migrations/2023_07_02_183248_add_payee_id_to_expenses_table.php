@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('expenses', function (Blueprint $table) {
-            $table->boolean('split')->after('frequency')->default(0);
+            $table->foreignId('payee_id')->index()->nullable()->after('user_id');
+            $table->foreign('payee_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -22,7 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('expenses', function (Blueprint $table) {
-            $table->dropColumn('split');
+            $table->dropForeign(['payee_id']);
+            $table->dropColumn('payee_id');
         });
     }
 };

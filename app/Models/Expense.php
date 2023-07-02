@@ -17,9 +17,12 @@ class Expense extends Model
         'copied',
         'expense_date',
         'split',
+        'split_percentage',
         'split_amount',
+        'payee_id',
         'user_id',
-        'category_id'
+        'category_id',
+        'payee_paid'
     ];
 
     protected $casts = [
@@ -31,10 +34,16 @@ class Expense extends Model
         'frequency' => 'string',
         'expense_date' => 'datetime',
         'user_id' => 'int',
-        'category_id' => 'int'
+        'category_id' => 'int',
+        'payee_paid' => 'bool',
     ];
 
     public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function payee()
     {
         return $this->belongsTo(User::class);
     }
