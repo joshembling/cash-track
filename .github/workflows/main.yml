@@ -12,9 +12,7 @@ jobs:
       - name: 🚚 Get latest code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
-          exclude:
-            - 'vendor/**'  # Exclude the vendor folder and its contents
+          fetch-depth: 1
 
       - name: Use Node.js 16
         uses: actions/setup-node@v3
