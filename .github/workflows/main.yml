@@ -34,27 +34,27 @@ jobs:
 
       - name: 🌱 Install Composer dependencies
         run: composer install
-        working-directory: ./laravel_project_directory  # Replace with the actual Laravel project directory
+        working-directory: ./
 
       - name: 💡 Optimize Composer Autoload
         run: composer dump-autoload --optimize
-        working-directory: ./laravel_project_directory  # Replace with the actual Laravel project directory
+        working-directory: ./
 
       - name: ⚙️ Laravel Configuration Cache
         run: php artisan config:cache
-        working-directory: ./laravel_project_directory  # Replace with the actual Laravel project directory
+        working-directory: ./
 
       - name: ⚙️ Laravel Event Cache
         run: php artisan event:cache
-        working-directory: ./laravel_project_directory  # Replace with the actual Laravel project directory
+        working-directory: ./
 
       - name: ⚙️ Laravel Route Cache
         run: php artisan route:cache
-        working-directory: ./laravel_project_directory  # Replace with the actual Laravel project directory
+        working-directory: ./
 
       - name: ⚙️ Laravel View Cache
         run: php artisan view:cache
-        working-directory: ./laravel_project_directory  # Replace with the actual Laravel project directory
+        working-directory: ./
 
       - name: 📂 Sync folders and files to the server
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
