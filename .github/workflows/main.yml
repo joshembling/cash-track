@@ -46,8 +46,8 @@ jobs:
 
       - name: 🗑️ Remove unnecessary directories
         run: |
-          rm -rf ./laravel_project_directory/tests
-          rm -rf ./laravel_project_directory/vendor
+          rm -rf ./tests
+          rm -rf ./vendor
 
       - name: 💡 Optimize Composer Autoload
         run: composer dump-autoload --optimize
