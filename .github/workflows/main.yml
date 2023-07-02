@@ -1,0 +1,64 @@
+name: 🚀 Publish Cash Track
+on:
+  push:
+    branches:
+      - main
+jobs:
+  FTP-Deploy-Action:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v3
+        id: cache-node-modules
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+      - name: 🔨 Install Dependencies
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        run: |
+          npm install
+          git reset --hard
+
+      - name: 🌱 Install Composer dependencies
+        run: composer install
+        working-directory: ./laravel_project_directory  # Replace with the actual Laravel project directory
+
+      - name: 💡 Optimize Composer Autoload
+        run: composer dump-autoload --optimize
+        working-directory: ./laravel_project_directory  # Replace with the actual Laravel project directory
+
+      - name: ⚙️ Laravel Configuration Cache
+        run: php artisan config:cache
+        working-directory: ./laravel_project_directory  # Replace with the actual Laravel project directory
+
+      - name: ⚙️ Laravel Event Cache
+        run: php artisan event:cache
+        working-directory: ./laravel_project_directory  # Replace with the actual Laravel project directory
+
+      - name: ⚙️ Laravel Route Cache
+        run: php artisan route:cache
+        working-directory: ./laravel_project_directory  # Replace with the actual Laravel project directory
+
+      - name: ⚙️ Laravel View Cache
+        run: php artisan view:cache
+        working-directory: ./laravel_project_directory  # Replace with the actual Laravel project directory
+
+      - name: 📂 Sync folders and files to the server
+        uses: SamKirkland/FTP-Deploy-Action@4.3.3
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
