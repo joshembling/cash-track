@@ -33,7 +33,7 @@ jobs:
           git reset --hard
 
       - name: 🚚 Install Composer Dependencies SITE
-        working-directory: ./
+        working-directory: ../
         run: composer install --prefer-dist
 
       - name: 📂 Sync folders and files to the server

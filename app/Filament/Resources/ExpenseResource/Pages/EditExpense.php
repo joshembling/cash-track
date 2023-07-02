@@ -38,7 +38,7 @@ class EditExpense extends EditRecord
             }
         }
 
-        // if paying/owing user
+        // if paying/owing userr
         if ($this->record->payee_id === auth()->user()->id) {
             if ($this->record->payee_paid === false && $data['payee_paid'] === true) {
                 $data['amount'] = $this->splitPayment($this->record['amount'], $this->record['split_percentage']);
