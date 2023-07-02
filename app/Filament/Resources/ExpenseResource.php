@@ -128,6 +128,9 @@ class ExpenseResource extends Resource
                     ->boolean(),
                 Tables\Columns\IconColumn::make('split')
                     ->boolean(),
+                Tables\Columns\IconColumn::make('payee_paid')
+                    ->label('Paid')
+                    ->boolean(),
                 Tables\Columns\TextColumn::make('frequency'),
                 Tables\Columns\TextColumn::make('expense_date')
                     ->date('jS F Y'),
