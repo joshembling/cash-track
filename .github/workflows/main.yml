@@ -19,14 +19,6 @@ jobs:
         with:
           node-version: "16"
 
-      - name: Cache Composer dependencies
-        uses: actions/cache@v2
-        with:
-          path: vendor
-          key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
-
       - name: Cache npm dependencies
         uses: actions/cache@v3
         id: cache-node-modules
@@ -40,34 +32,9 @@ jobs:
           npm install
           git reset --hard
 
-      - name: 🌱 Install Composer dependencies
-        run: composer install --no-dev --prefer-dist --no-interaction --no-progress --no-suggest
-        working-directory: ./
-
-      - name: 🗑️ Remove unnecessary directories
-        run: |
-          rm -rf ./tests
-          rm -rf ./vendor
-
-      - name: 💡 Optimize Composer Autoload
-        run: composer dump-autoload --optimize
-        working-directory: ./
-
-      - name: ⚙️ Laravel Configuration Cache
-        run: php artisan config:cache
-        working-directory: ./
-
-      - name: ⚙️ Laravel Event Cache
-        run: php artisan event:cache
-        working-directory: ./
-
-      - name: ⚙️ Laravel Route Cache
-        run: php artisan route:cache
-        working-directory: ./
-
-      - name: ⚙️ Laravel View Cache
-        run: php artisan view:cache
-        working-directory: ./
+      - name: 🚚 Install Composer Dependencies SITE
+            working-directory: ./
+            run: composer install --prefer-dist
 
       - name: 📂 Sync folders and files to the server
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
@@ -75,3 +42,11 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
+          exclude: |
+          .git/**
+          .git**
+          .git*/**
+          **/.git*
+          **/.git*/**
+          **/node_modules/**
+          **/vendor/**
