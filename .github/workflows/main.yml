@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: 🚚 Get latest code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
         with:
           fetch-depth: 1
 
@@ -41,8 +41,8 @@ jobs:
           git reset --hard
 
       - name: 🌱 Install Composer dependencies
-        run: composer install
-        working-directory: ./
+        run: composer install --no-dev --prefer-dist --no-interaction --no-progress --no-suggest
+        working-directory: ./laravel_project_directory  # Replace with the actual Laravel project directory
 
       - name: 💡 Optimize Composer Autoload
         run: composer dump-autoload --optimize
