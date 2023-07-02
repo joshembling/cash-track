@@ -30,6 +30,10 @@ class UserResource extends Resource
                     ->email()
                     ->required()
                     ->maxLength(255),
+                Forms\Components\TextInput::make('monthly_salary')
+                    ->numeric()
+                    ->required()
+                    ->maxLength(255),
             ]);
     }
 

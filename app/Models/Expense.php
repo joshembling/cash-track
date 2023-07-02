@@ -15,7 +15,9 @@ class Expense extends Model
         'recurring',
         'frequency',
         'copied',
-        'date',
+        'expense_date',
+        'split',
+        'split_amount',
         'user_id',
         'category_id'
     ];
@@ -25,8 +27,9 @@ class Expense extends Model
         'amount' => 'decimal:2',
         'recurring' => 'bool',
         'copied' => 'bool',
+        'split' => 'bool',
         'frequency' => 'string',
-        'date' => 'datetime',
+        'expense_date' => 'datetime',
         'user_id' => 'int',
         'category_id' => 'int'
     ];

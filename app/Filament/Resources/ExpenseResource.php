@@ -40,7 +40,7 @@ class ExpenseResource extends Resource
                     ->label('Category')
                     ->options(Category::all()->pluck('name', 'id'))
                     ->required(),
-                Forms\Components\DatePicker::make('date')
+                Forms\Components\DatePicker::make('expense_date')
                     ->required(),
                 Forms\Components\Toggle::make('recurring')
                     ->reactive(),
@@ -52,6 +52,20 @@ class ExpenseResource extends Resource
                         'Quarterly' => 'Quarterly',
                     ])
                     ->hidden(fn (Closure $get) => !$get('recurring'))
+                    ->required(),
+                Forms\Components\Toggle::make('split')
+                    ->reactive(),
+                Forms\Components\Select::make('split_amount')
+                    ->options([
+                        '50' => '50/50',
+                        'Other' => 'Other'
+                    ])
+                    ->hidden(fn (Closure $get) => !$get('split'))
+                    ->required()
+                    ->reactive(),
+                Forms\Components\TextInput::make('split_amount')
+                    ->prefixIcon('heroicon-o-currency-pound')
+                    ->hidden(fn (Closure $get) => $get('split_amount') !== 'Other')
                     ->required(),
                 Forms\Components\Select::make('tags')
                     ->relationship('tags', 'name')
@@ -80,7 +94,7 @@ class ExpenseResource extends Resource
                 Tables\Columns\IconColumn::make('recurring')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('frequency'),
-                Tables\Columns\TextColumn::make('date')
+                Tables\Columns\TextColumn::make('expense_date')
                     ->date('jS F Y'),
                 Tables\Columns\TextColumn::make('tags.name')
                     ->searchable()
@@ -88,6 +102,7 @@ class ExpenseResource extends Resource
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime(),
             ])
+            ->defaultSort('expense_date')
             ->filters([
                 // TODO
                 // Date by year
