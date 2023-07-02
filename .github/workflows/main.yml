@@ -19,6 +19,14 @@ jobs:
         with:
           node-version: "16"
 
+      - name: Cache Composer dependencies
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
       - name: Cache npm dependencies
         uses: actions/cache@v3
         id: cache-node-modules
