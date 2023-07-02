@@ -22,6 +22,7 @@ class EditExpense extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
+        // if original user
         if ($this->record->user_id === auth()->user()->id) {
             if (
                 array_key_exists('amount', $data) &&
@@ -37,6 +38,7 @@ class EditExpense extends EditRecord
             }
         }
 
+        // if paying/owing user
         if ($this->record->payee_id === auth()->user()->id) {
             if ($this->record->payee_paid === false && $data['payee_paid'] === true) {
                 $data['amount'] = $this->splitPayment($this->record['amount'], $this->record['split_percentage']);
