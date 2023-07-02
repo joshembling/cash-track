@@ -13,8 +13,8 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          paths-ignore:
-            - 'vendor/**'  # Ignore the vendor folder and its contents
+          exclude:
+            - 'vendor/**'  # Exclude the vendor folder and its contents
 
       - name: Use Node.js 16
         uses: actions/setup-node@v3
