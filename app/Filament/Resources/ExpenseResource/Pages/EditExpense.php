@@ -26,9 +26,10 @@ class EditExpense extends EditRecord
         if ($this->record->user_id === auth()->user()->id) {
             if (
                 array_key_exists('amount', $data) &&
+                array_key_exists('split', $data) &&
                 array_key_exists('split_percentage', $data) &&
-                $data['split_percentage'] !== 'Other' &&
-                $data['split'] === true
+                $data['split'] === true &&
+                $data['split_percentage'] !== 'Other'
             ) {
                 $data['split_amount'] = $this->splitPayment($data['amount'], $data['split_percentage']);
             } else {
@@ -38,15 +39,12 @@ class EditExpense extends EditRecord
             }
         }
 
-        // if paying/owing user
-        if ($this->record->payee_id === auth()->user()->id) {
-            if ($this->record->payee_paid === false && $data['payee_paid'] === true) {
-                $data['amount'] = $this->splitPayment($this->record['amount'], $this->record['split_percentage']);
-            }
+        if ($this->record->payee_paid === false && $data['payee_paid'] === true) {
+            $data['amount'] = $this->splitPayment($this->record['amount'], $this->record['split_percentage']);
+        }
 
-            if ($this->record->payee_paid === true && $data['payee_paid'] === false) {
-                $data['amount'] = $this->revokePayment($this->record['amount'], $this->record['split_percentage']);
-            }
+        if ($this->record->payee_paid === true && $data['payee_paid'] === false) {
+            $data['amount'] = $this->revokePayment($this->record['amount'], $this->record['split_percentage']);
         }
 
         return $data;
