@@ -34,11 +34,13 @@ class ExpenseResource extends Resource
                     ->maxLength(255),
                 Forms\Components\TextInput::make('amount')
                     ->prefixIcon('heroicon-o-currency-pound')
-                    ->required(),
+                    ->required()
+                    ->disabled(fn (Closure $get, $record) => $record ? $record->payee_id == auth()->user()->id : false),
 
                 Forms\Components\DatePicker::make('expense_date')
                     ->displayFormat('j F Y')
-                    ->required(),
+                    ->required()
+                    ->disabled(fn (Closure $get, $record) => $record ? $record->payee_id == auth()->user()->id : false),
 
                 Forms\Components\Fieldset::make('Recurring payments')
                     ->schema([
@@ -91,7 +93,7 @@ class ExpenseResource extends Resource
                             })
                     ])->hidden(fn (Closure $get) => $get('split') === false),
 
-                Forms\Components\Fieldset::make('Categorise')
+                Forms\Components\Fieldset::make('Categories')
                     ->schema([
                         Forms\Components\Select::make('category_id')
                             ->relationship('category', 'name')
