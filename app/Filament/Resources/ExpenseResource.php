@@ -76,7 +76,6 @@ class ExpenseResource extends Resource
                             ->prefixIcon('heroicon-o-currency-pound')
                             ->hidden(fn (Closure $get) => $get('split_percentage') !== 'Other')
                             ->required(),
-                        //])->hidden(fn (Closure $get) => $get('payee_id') === auth()->user()->id),
                     ])->hidden(fn (Closure $get, $record) => $record ? $record->payee_id == auth()->user()->id : false),
 
                 Forms\Components\Fieldset::make('Payments')
@@ -89,7 +88,7 @@ class ExpenseResource extends Resource
 
                                 return 'Paid';
                             })
-                            ->disabled(fn (Closure $get) => $get('payee_id') !== auth()->user()->id)
+                            ->disabled(fn (Closure $get, $record) => $record && $record->user_id !== auth()->user()->id)
                     ])->hidden(fn (Closure $get) => $get('split') === false),
 
                 Forms\Components\Fieldset::make('Categorise')
