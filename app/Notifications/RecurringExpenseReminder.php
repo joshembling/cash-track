@@ -8,7 +8,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class RecurringExpenseReminder extends Notification implements ShouldQueue
+class RecurringExpenseReminder extends Notification
 {
     use Queueable;
 
