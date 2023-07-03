@@ -12,9 +12,9 @@
         <p>Just a quick reminder to say that your {{$expense->name}} payment of £{{$expense->split_amount ?? $expense->amount}} is due tomorrow.</p>
         @if($expense->split && $expense->payee_id !== null)
             @if ($user->id === $expense->user_id)
-            <p>{{$expense->payee->name}} will transfer you their share. 👀</p>
+                <p>{{$expense->payee->name}} will transfer you their share. 👀</p>
             @else
-            <p>Don't forget to transfer the money to {{$expense->user->name}}.</p>
+                <p>Don't forget to transfer the money to {{$expense->user->name}}. 💰</p>
             @endif
         @endif
         <p>Kind regards,</p>

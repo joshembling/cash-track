@@ -23,6 +23,7 @@
 
         p {
         margin: .1rem 0 1rem;
+        color: #fff;
       }
 
       .panel-body {
@@ -47,7 +48,7 @@
     </style>
 </head>
 <body>
-    <div style="padding: 1rem">
+    <div style="padding: 2rem">
         @yield('content')
     </div>
 </body>
