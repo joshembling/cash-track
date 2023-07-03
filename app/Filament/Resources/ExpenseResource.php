@@ -77,7 +77,7 @@ class ExpenseResource extends Resource
                             ->hidden(fn (Closure $get) => $get('split_percentage') !== 'Other')
                             ->required(),
                         //])->hidden(fn (Closure $get) => $get('payee_id') === auth()->user()->id),
-                    ])->hidden(fn (Closure $get, $record) => dd($record->payee_id === auth()->user()->id)),
+                    ])->hidden(fn (Closure $get, $record) => dd($record->payee_id == auth()->user()->id)),
 
                 Forms\Components\Fieldset::make('Payments')
                     ->schema([
