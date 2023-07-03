@@ -18,7 +18,7 @@
 
       .chat li .chat-body p {
         margin: 0;
-        color: #cfcece;
+        color: #fbfbfb;
       }
 
         p {
@@ -42,7 +42,7 @@
 
       ::-webkit-scrollbar-thumb {
         -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-        background-color: #555;
+        background-color: #000000;
       }
     </style>
 </head>
