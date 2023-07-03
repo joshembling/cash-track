@@ -75,16 +75,16 @@ class AddRecurringExpenses extends Command
                 break;
         }
 
-        if (Carbon::parse($expense->date)->add($interval) <= now()) {
+        if (Carbon::parse($expense->expense_date)->add($interval) <= now()) {
             $existingDuplicate = Expense::where('user_id', $expense->user_id)
-                ->where('date', Carbon::parse($expense->date)->add($interval))
+                ->where('expense_date', Carbon::parse($expense->expense_date)->add($interval))
                 ->first();
 
             if (!$existingDuplicate) {
                 $new_expense = $expense->replicate();
 
                 $new_expense->fill([
-                    'date' => Carbon::parse($expense->date)->add($interval),
+                    'expense_date' => Carbon::parse($expense->expense_date)->add($interval),
                     'created_at' => now(),
                     'updated_at' => now()
                 ]);
