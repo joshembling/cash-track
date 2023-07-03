@@ -52,7 +52,7 @@ class ExpenseResource extends Resource
                             ])
                             ->hidden(fn (Closure $get) => !$get('recurring'))
                             ->required(),
-                    ]),
+                    ])->disabled(fn (Closure $get, $record) => $record ? $record->payee_id == auth()->user()->id : false),
 
                 Forms\Components\Fieldset::make('Split payments')
                     ->schema([
