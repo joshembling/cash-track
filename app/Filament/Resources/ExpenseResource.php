@@ -88,7 +88,6 @@ class ExpenseResource extends Resource
 
                                 return 'Paid';
                             })
-                            ->disabled(fn (Closure $get, $record) => $record && $record->user_id !== auth()->user()->id)
                     ])->hidden(fn (Closure $get) => $get('split') === false),
 
                 Forms\Components\Fieldset::make('Categorise')
