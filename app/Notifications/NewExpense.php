@@ -8,7 +8,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class RecurringExpenseReminder extends Notification
+class NewExpense extends Notification
 {
     use Queueable;
 
@@ -35,8 +35,8 @@ class RecurringExpenseReminder extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject("🤑 Your {$this->expense->name} payment is due tomorrow")
-            ->markdown('emails.recurring-expense', [
+            ->subject("You have a new payment to view 👀")
+            ->markdown('emails.new-expense', [
                 'expense' => $this->expense,
                 'user' => $notifiable,
             ]);
