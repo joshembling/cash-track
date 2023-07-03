@@ -13,7 +13,6 @@ class ExpenseObserver
      */
     public function created(Expense $expense): void
     {
-        //dd($expense);
         if ($expense->payee_id !== null && $expense->split) {
             $secondary = User::find($expense->payee_id);
             $secondary->notify(new NewExpense($expense));

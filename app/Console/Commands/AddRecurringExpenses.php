@@ -113,7 +113,7 @@ class AddRecurringExpenses extends Command
 
     protected function sendReminder(Expense $expense): void
     {
-        $delay = now()->addHours(1);
+        $delay = now()->addMinutes(1);
 
         if ($expense->reminder_sent_user === null) {
             $primary = User::find($expense->user_id);

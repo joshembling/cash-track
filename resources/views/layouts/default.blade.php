@@ -47,6 +47,8 @@
     </style>
 </head>
 <body>
-    @yield('content')
+    <div style="padding: 1rem">
+        @yield('content')
+    </div>
 </body>
 </html>
