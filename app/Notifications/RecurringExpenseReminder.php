@@ -35,6 +35,7 @@ class RecurringExpenseReminder extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
+            ->from('noreply@cash.com')
             ->subject("🤑 Your {$this->expense->name} payment is due tomorrow")
             ->markdown('emails.recurring-expense', [
                 'expense' => $this->expense,
