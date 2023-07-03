@@ -113,17 +113,18 @@ class ExpenseResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user.name')
-                    ->label('Name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('category.name')
-                    ->label('Category')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('expense_date')
+                    ->label('date')
+                    ->date('d/m/y'),
                 Tables\Columns\TextColumn::make('name')
                     ->label('Expense')
-                    ->searchable(),
+                    ->searchable()
+                    ->wrap(),
                 Tables\Columns\TextColumn::make('amount')
                     ->prefix('£'),
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('Added by')
+                    ->searchable(),
                 Tables\Columns\IconColumn::make('recurring')
                     ->boolean(),
                 Tables\Columns\IconColumn::make('split')
@@ -132,15 +133,15 @@ class ExpenseResource extends Resource
                     ->label('Paid')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('frequency'),
-                Tables\Columns\TextColumn::make('expense_date')
-                    ->date('jS F Y'),
+                Tables\Columns\TextColumn::make('category.name')
+                    ->label('Category')
+                    ->searchable()
+                    ->wrap(),
                 Tables\Columns\TextColumn::make('tags.name')
                     ->searchable()
                     ->wrap(),
-                //Tables\Columns\TextColumn::make('created_at')
-                //    ->dateTime('jS F Y'),
             ])
-            ->defaultSort('expense_date')
+            ->defaultSort('expense_date', 'desc')
             ->filters([
                 // TODO
                 // Date by year
