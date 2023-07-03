@@ -3,7 +3,9 @@
 namespace App\Console\Commands;
 
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Expense;
+use App\Notifications\RecurringExpenseReminder;
 use Illuminate\Console\Command;
 
 class AddRecurringExpenses extends Command
@@ -55,7 +57,7 @@ class AddRecurringExpenses extends Command
         }
     }
 
-    protected function validateFrequency(Expense $expense, string $frequency)
+    protected function validateFrequency(Expense $expense, string $frequency): void
     {
         switch ($frequency) {
             case 'Weekly':
@@ -73,6 +75,10 @@ class AddRecurringExpenses extends Command
             case 'Quarterly':
                 $interval = '3 months';
                 break;
+        }
+
+        if (Carbon::parse($expense->expense_date)->add($interval)->subDay() <= now()) {
+            $this->sendReminder($expense);
         }
 
         if (Carbon::parse($expense->expense_date)->add($interval) <= now()) {
@@ -102,6 +108,29 @@ class AddRecurringExpenses extends Command
                     'copied' => true
                 ]);
             }
+        }
+    }
+
+    protected function sendReminder(Expense $expense): void
+    {
+        $delay = now()->addMinutes(1);
+
+        if ($expense->reminder_sent_user === null) {
+            $primary = User::find($expense->user_id);
+            $primary->notify((new RecurringExpenseReminder($expense))->delay($delay));
+
+            $expense->update([
+                'reminder_sent_user' => $delay,
+            ]);
+        }
+
+        if ($expense->reminder_sent_payee === null && $expense->split && $expense->payee_id !== null) {
+            $secondary = User::find($expense->payee_id);
+            $secondary->notify((new RecurringExpenseReminder($expense))->delay($delay));
+
+            $expense->update([
+                'reminder_sent_payee' => $delay,
+            ]);
         }
     }
 }

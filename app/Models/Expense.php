@@ -22,7 +22,9 @@ class Expense extends Model
         'payee_id',
         'user_id',
         'category_id',
-        'payee_paid'
+        'payee_paid',
+        'reminder_sent_user',
+        'reminder_sent_payee'
     ];
 
     protected $casts = [
@@ -36,6 +38,8 @@ class Expense extends Model
         'user_id' => 'int',
         'category_id' => 'int',
         'payee_paid' => 'bool',
+        'reminder_sent_user' => 'datetime',
+        'reminder_sent_payee' => 'datetime',
     ];
 
     public function user()
