@@ -18,12 +18,11 @@
 
       .chat li .chat-body p {
         margin: 0;
-        color: #777777;
+        color: #cfcece;
       }
 
         p {
         margin: .1rem 0 1rem;
-        color: #fff;
       }
 
       .panel-body {
