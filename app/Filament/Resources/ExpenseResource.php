@@ -114,7 +114,7 @@ class ExpenseResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('expense_date')
-                    ->label('date')
+                    ->label('Date')
                     ->date('d/m/y'),
                 Tables\Columns\TextColumn::make('name')
                     ->label('Expense')
