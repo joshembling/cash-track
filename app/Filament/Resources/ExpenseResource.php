@@ -77,12 +77,16 @@ class ExpenseResource extends Resource
                             ->default(0),
                         Forms\Components\TextInput::make('split_amount')
                             ->prefixIcon('heroicon-o-currency-pound')
-                            ->hidden(fn (Closure $get) => $get('split_percentage') !== 'Other')
-                            ->required(),
+                            //->hidden(fn (Closure $get) => $get('split_percentage') !== 'Other')
+                            ->disabled(),
                     ])->hidden(fn (Closure $get, $record) => $record ? $record->payee_id == auth()->user()->id : false),
 
                 Forms\Components\Fieldset::make('Payments')
                     ->schema([
+                        Forms\Components\TextInput::make('split_amount')
+                            ->prefixIcon('heroicon-o-currency-pound')
+                            //->hidden(fn (Closure $get) => $get('split_percentage') !== 'Other')
+                            ->disabled(),
                         Forms\Components\Toggle::make('payee_paid')
                             ->label(function (Closure $get, $record) {
                                 if ($record && $record->user_id !== auth()->user()->id) {
