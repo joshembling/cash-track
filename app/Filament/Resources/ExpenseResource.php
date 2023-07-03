@@ -37,6 +37,7 @@ class ExpenseResource extends Resource
                     ->required(),
 
                 Forms\Components\DatePicker::make('expense_date')
+                    ->displayFormat('j F Y')
                     ->required(),
 
                 Forms\Components\Fieldset::make('Recurring payments')
