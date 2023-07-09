@@ -49,14 +49,13 @@ class EditExpense extends EditRecord
             ) {
                 if ($data['original_amount'] === $this->record['original_amount']) {
                     $data['amount'] = $this->record['amount'];
-                } elseif (
-                    $data['original_amount'] !== $this->record['original_amount'] &&
-                    $data['payee_paid']
-                ) {
+                } elseif ($data['original_amount'] !== $this->record['original_amount']) {
                     $data['amount'] = $this->splitPayment($data['original_amount'], $data['split_percentage']);
                 } else {
                     $data['amount'] = $data['original_amount'];
                 }
+
+                $data['paid_at'] = now();
             }
 
             if ($this->record->payee_paid === false && $data['payee_paid'] === true) {

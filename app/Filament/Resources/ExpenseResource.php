@@ -88,7 +88,8 @@ class ExpenseResource extends Resource
                         Forms\Components\Toggle::make('paid_at')
                             ->label('Mark as paid')
                             ->onIcon('heroicon-s-shield-check')
-                            ->offIcon('heroicon-s-x-circle'),
+                            ->offIcon('heroicon-s-x-circle')
+                            ->hidden(fn (Closure $get, $record) => $record && $record->user_id !== auth()->user()->id),
                         Forms\Components\TextInput::make('split_amount')
                             ->prefixIcon('heroicon-o-currency-pound')
                             ->disabled()
