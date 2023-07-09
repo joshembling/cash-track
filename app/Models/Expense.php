@@ -11,6 +11,7 @@ class Expense extends Model
 
     protected $fillable = [
         'name',
+        'original_amount',
         'amount',
         'recurring',
         'frequency',
@@ -23,12 +24,14 @@ class Expense extends Model
         'user_id',
         'category_id',
         'payee_paid',
+        'paid_at',
         'reminder_sent_user',
         'reminder_sent_payee'
     ];
 
     protected $casts = [
         'name' => 'string',
+        'original_amount' => 'decimal:2',
         'amount' => 'decimal:2',
         'recurring' => 'bool',
         'copied' => 'bool',
@@ -38,6 +41,7 @@ class Expense extends Model
         'user_id' => 'int',
         'category_id' => 'int',
         'payee_paid' => 'bool',
+        'paid_at' => 'datetime',
         'reminder_sent_user' => 'datetime',
         'reminder_sent_payee' => 'datetime',
     ];

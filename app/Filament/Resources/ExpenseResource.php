@@ -32,10 +32,16 @@ class ExpenseResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('amount')
+                Forms\Components\TextInput::make('original_amount')
+                    ->label('Full Amount')
                     ->prefixIcon('heroicon-o-currency-pound')
                     ->required()
-                    ->disabled(fn (Closure $get, $record) => $record ? $record->payee_id == auth()->user()->id : false),
+                    ->hidden(fn (Closure $get, $record) => !$record || !$record->original_amount || !$record->split),
+                Forms\Components\TextInput::make('amount')
+                    ->label(fn (Closure $get, $record) => $record && $record->split ? 'Your current amount' : 'Amount')
+                    ->prefixIcon('heroicon-o-currency-pound')
+                    ->required()
+                    ->disabled(fn (Closure $get, $record) => $record ? $record->payee_id == auth()->user()->id || $record->split : false),
 
                 Forms\Components\DatePicker::make('expense_date')
                     ->displayFormat('j F Y')
@@ -75,27 +81,28 @@ class ExpenseResource extends Resource
                             ->hidden(fn (Closure $get) => !$get('split'))
                             ->options(User::whereNot('id', auth()->user()->id)->pluck('name', 'id'))
                             ->default(0),
-                        Forms\Components\TextInput::make('split_amount')
-                            ->prefixIcon('heroicon-o-currency-pound')
-                            //->hidden(fn (Closure $get) => $get('split_percentage') !== 'Other')
-                            ->disabled(),
                     ])->hidden(fn (Closure $get, $record) => $record ? $record->payee_id == auth()->user()->id : false),
 
                 Forms\Components\Fieldset::make('Payments')
                     ->schema([
+                        Forms\Components\Toggle::make('paid_at')
+                            ->label('Mark as paid')
+                            ->onIcon('heroicon-s-shield-check')
+                            ->offIcon('heroicon-s-x-circle'),
                         Forms\Components\TextInput::make('split_amount')
                             ->prefixIcon('heroicon-o-currency-pound')
-                            //->hidden(fn (Closure $get) => $get('split_percentage') !== 'Other')
-                            ->disabled(),
+                            ->disabled()
+                            ->hidden(fn (Closure $get) => $get('split') === false),
                         Forms\Components\Toggle::make('payee_paid')
                             ->label(function (Closure $get, $record) {
                                 if ($record && $record->user_id !== auth()->user()->id) {
                                     return 'I have paid this expense';
                                 }
 
-                                return 'Paid';
-                            })
-                    ])->hidden(fn (Closure $get) => $get('split') === false),
+                                return 'I have received this expense';
+                            })->hidden(fn (Closure $get) => $get('split') === false)
+                        //])->hidden(fn (Closure $get) => $get('split') === false),
+                    ]),
 
                 Forms\Components\Fieldset::make('Categories')
                     ->schema([
@@ -135,7 +142,7 @@ class ExpenseResource extends Resource
                     ->boolean(),
                 Tables\Columns\IconColumn::make('split')
                     ->boolean(),
-                Tables\Columns\IconColumn::make('payee_paid')
+                Tables\Columns\IconColumn::make('paid_at')
                     ->label('Paid')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('frequency'),

@@ -24,28 +24,68 @@ class EditExpense extends EditRecord
     {
         // if original user
         if ($this->record->user_id === auth()->user()->id) {
+            if (array_key_exists('original_amount', $data) && $data['original_amount'] !== $this->record['original_amount']) {
+                $data['amount'] = $data['original_amount'];
+                $data['split_amount'] = $this->splitPayment($data['original_amount'], $data['split_percentage']);
+            }
+
             if (
-                array_key_exists('amount', $data) &&
                 array_key_exists('split', $data) &&
-                array_key_exists('split_percentage', $data) &&
-                $data['split'] === true &&
-                $data['split_percentage'] !== 'Other'
+                $data['split'] === false
             ) {
-                $data['split_amount'] = $this->splitPayment($data['amount'], $data['split_percentage']);
-            } else {
                 $data['payee_id'] = null;
+                $data['payee_paid'] = false;
+                $data['split'] = false;
                 $data['split_percentage'] = null;
                 $data['split_amount'] = null;
             }
         }
 
         if (array_key_exists('payee_paid', $data)) {
+            if (
+                $this->record->payee_paid &&
+                $data['payee_paid'] &&
+                array_key_exists('original_amount', $data)
+            ) {
+                if ($data['original_amount'] === $this->record['original_amount']) {
+                    $data['amount'] = $this->record['amount'];
+                } elseif (
+                    $data['original_amount'] !== $this->record['original_amount'] &&
+                    $data['payee_paid']
+                ) {
+                    $data['amount'] = $this->splitPayment($data['original_amount'], $data['split_percentage']);
+                } else {
+                    $data['amount'] = $data['original_amount'];
+                }
+            }
+
             if ($this->record->payee_paid === false && $data['payee_paid'] === true) {
-                $data['amount'] = $this->splitPayment($this->record['amount'], $this->record['split_percentage']);
+                $data['amount'] = $this->splitPayment($data['original_amount'], $data['split_percentage']);
             }
 
             if ($this->record->payee_paid === true && $data['payee_paid'] === false) {
-                $data['amount'] = $this->revokePayment($this->record['amount'], $this->record['split_percentage']);
+                $data['amount'] = $this->revokePayment($data['original_amount'], $data['split_percentage']);
+                $data['split_amount'] = $this->splitPayment($data['original_amount'], $data['split_percentage']);
+            }
+        }
+
+        if (array_key_exists('paid_at', $data)) {
+            if (is_null($this->record->paid_at) && $data['paid_at'] === true) {
+                $data['paid_at'] = now();
+            }
+
+            if (!is_null($this->record->paid_at) && $data['paid_at'] === true) {
+                $data['paid_at'] = $this->record->paid_at;
+            }
+
+            if (!is_null($this->record->paid_at) || $data['paid_at'] === false) {
+                $data['paid_at'] = null;
+            }
+        }
+
+        if (array_key_exists('recurring', $data)) {
+            if ($data['recurring'] === false) {
+                $data['frequency'] = null;
             }
         }
 
@@ -61,8 +101,8 @@ class EditExpense extends EditRecord
 
     public function revokePayment($amount, $percentage)
     {
-        $res = $amount / ($percentage / 100);
-
+        //$res = $amount / ($percentage / 100);
+        $res = $amount;
         return number_format((float) $res, 2, '.', '');
     }
 }

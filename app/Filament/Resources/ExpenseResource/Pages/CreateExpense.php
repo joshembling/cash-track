@@ -15,6 +15,8 @@ class CreateExpense extends CreateRecord
     {
         $data['user_id'] = auth()->id();
 
+        $data['original_amount'] = $data['amount'];
+
         if (
             array_key_exists('amount', $data) &&
             array_key_exists('split_percentage', $data) &&
@@ -26,6 +28,14 @@ class CreateExpense extends CreateRecord
             $data['payee_id'] = null;
             $data['split_percentage'] = null;
             $data['split_amount'] = null;
+        }
+
+        if (array_key_exists('paid_at', $data)) {
+            if ($data['paid_at'] === true) {
+                $data['paid_at'] = now();
+            } else {
+                $data['paid_at'] = null;
+            }
         }
 
         return $data;

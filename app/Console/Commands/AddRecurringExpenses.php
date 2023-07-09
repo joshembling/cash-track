@@ -91,6 +91,9 @@ class AddRecurringExpenses extends Command
 
                 $new_expense->fill([
                     'expense_date' => Carbon::parse($expense->expense_date)->add($interval),
+                    'paid_at' => !is_null($expense->paid_at) ? Carbon::parse($expense->paid_at)->add($interval) : null,
+                    'reminder_sent_user' => null,
+                    'reminder_sent_payee' => null,
                     'created_at' => now(),
                     'updated_at' => now()
                 ]);
