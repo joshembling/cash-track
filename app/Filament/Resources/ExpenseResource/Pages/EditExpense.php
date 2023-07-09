@@ -65,7 +65,7 @@ class EditExpense extends EditRecord
 
             if ($this->record->payee_paid === true && $data['payee_paid'] === false) {
                 $data['amount'] = $this->revokePayment($data['original_amount'], $data['split_percentage'] ?? $this->record['split_percentage']);
-                $data['split_amount'] = $this->splitPayment($data['original_amount'], $data['split_percentage']);
+                $data['split_amount'] = $this->splitPayment($data['original_amount'], $data['split_percentage'] ?? $this->record['split_percentage']);
             }
         }
 
