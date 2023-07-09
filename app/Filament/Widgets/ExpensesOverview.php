@@ -17,7 +17,7 @@ class ExpensesOverview extends BarChartWidget
     {
         $data = Trend::model(Expense::class)
             ->between(
-                start: now()->subMonths(6),
+                start: now()->subMonths(2),
                 end: now(),
             )
             ->dateColumn('expense_date')
