@@ -54,17 +54,19 @@ class EditExpense extends EditRecord
                 } else {
                     $data['amount'] = $data['original_amount'];
                 }
+            }
+
+            if (!$this->record->payee_paid && $data['payee_paid']) {
+                $data['amount'] = $this->splitPayment($data['original_amount'], $data['split_percentage'] ?? $this->record['split_percentage']);
 
                 $data['paid_at'] = now();
             }
 
-            if ($this->record->payee_paid === false && $data['payee_paid'] === true) {
-                $data['amount'] = $this->splitPayment($data['original_amount'], $data['split_percentage'] ?? $this->record['split_percentage']);
-            }
-
-            if ($this->record->payee_paid === true && $data['payee_paid'] === false) {
+            if ($this->record->payee_paid && !$data['payee_paid']) {
                 $data['amount'] = $this->revokePayment($data['original_amount'], $data['split_percentage'] ?? $this->record['split_percentage']);
                 $data['split_amount'] = $this->splitPayment($data['original_amount'], $data['split_percentage'] ?? $this->record['split_percentage']);
+
+                $data['paid_at'] = null;
             }
         }
 
