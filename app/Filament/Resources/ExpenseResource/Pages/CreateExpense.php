@@ -13,7 +13,9 @@ class CreateExpense extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['user_id'] = auth()->id();
+        if (!array_key_exists('user_id', $data)) {
+            $data['user_id'] = auth()->id();
+        }
 
         $data['original_amount'] = $data['amount'];
 
@@ -46,5 +48,20 @@ class CreateExpense extends CreateRecord
         $res = $amount * ($percentage / 100);
 
         return number_format((float) $res, 2, '.', '');
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        $resource = static::getResource();
+
+        if ($resource::hasPage('view') && $resource::canView($this->record)) {
+            return $resource::getUrl('view', ['record' => $this->record]);
+        }
+
+        if ($resource::hasPage('edit') && $resource::canEdit($this->record) && $this->record->user_id === auth()->id()) {
+            return $resource::getUrl('edit', ['record' => $this->record]);
+        }
+
+        return $resource::getUrl('index');
     }
 }

@@ -51,6 +51,18 @@ class ExpenseResource extends Resource
                     ->required()
                     ->disabled(fn (Closure $get, $record) => $record ? $record->payee_id == auth()->user()->id : false),
 
+                Forms\Components\Fieldset::make('Reassign this payment')
+                    ->schema([
+                        Forms\Components\Toggle::make('reassign')
+                            ->reactive(),
+                        Forms\Components\Select::make('user_id')
+                            ->label('User')
+                            ->hidden(fn (Closure $get) => !$get('reassign'))
+                            ->options(User::whereNot('id', auth()->user()->id)->pluck('name', 'id'))
+                            ->default(0),
+                    ])
+                    ->hiddenOn('edit'),
+
                 Forms\Components\Fieldset::make('Recurring payments')
                     ->schema([
                         Forms\Components\Toggle::make('recurring')
@@ -64,7 +76,9 @@ class ExpenseResource extends Resource
                             ])
                             ->hidden(fn (Closure $get) => !$get('recurring'))
                             ->required(),
-                    ])->disabled(fn (Closure $get, $record) => $record ? $record->payee_id == auth()->user()->id : false),
+                    ])
+                    ->hidden(fn (Closure $get) => $get('reassign'))
+                    ->disabled(fn (Closure $get, $record) => $record ? $record->payee_id == auth()->user()->id : false),
 
                 Forms\Components\Fieldset::make('Split payments')
                     ->schema([
@@ -84,7 +98,13 @@ class ExpenseResource extends Resource
                             ->hidden(fn (Closure $get) => !$get('split'))
                             ->options(User::whereNot('id', auth()->user()->id)->pluck('name', 'id'))
                             ->default(0),
-                    ])->hidden(fn (Closure $get, $record) => $record ? $record->payee_id == auth()->user()->id : false),
+                    ])->hidden(function (Closure $get, $record) {
+                        if ($get('reassign')) {
+                            return true;
+                        }
+
+                        return $record ? $record->payee_id == auth()->user()->id : false;
+                    }),
 
                 Forms\Components\Fieldset::make('Payments')
                     ->schema([
