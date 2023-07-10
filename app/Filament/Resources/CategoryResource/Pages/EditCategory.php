@@ -10,6 +10,13 @@ class EditCategory extends EditRecord
 {
     protected static string $resource = CategoryResource::class;
 
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $data['name'] = ucfirst($data['name']);
+
+        return $data;
+    }
+
     protected function getActions(): array
     {
         return [
