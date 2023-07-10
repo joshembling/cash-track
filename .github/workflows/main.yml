@@ -41,12 +41,7 @@ jobs:
         run: composer install
 
       - name: 🧪 Generate Application Key
-        working-directory: ./
-        run: php artisan key:generate --show
-
-      - name: 🧪 Set Application Key
-        run: |
-          echo "APP_KEY=${{ steps.generate-key.outputs.key }}" >> .env
+        run: php artisan key:generate --show >> $GITHUB_ENV
 
       - name: 🧪 PHP Unit
         uses: php-actions/phpunit@v3
@@ -56,6 +51,7 @@ jobs:
           configuration: phpunit.xml
           args: --coverage-text
         env:
+          APP_KEY: ${{ env.APP_KEY }}
           XDEBUG_MODE: coverage
           TEST_NAME: Scarlett
 
