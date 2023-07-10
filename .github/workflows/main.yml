@@ -41,10 +41,15 @@ jobs:
         run: composer install
 
       - name: 🧪 PHP Unit
-        working-directory: ./tests
-        run: |
-          ls  # Debugging: List the contents of the tests directory
-          phpunit/phpunit@9
+        uses: php-actions/phpunit@v3
+        with:
+          php_extensions: xdebug
+          bootstrap: vendor/autoload.php
+          configuration: test/phpunit.xml
+          args: --coverage-text
+        env:
+          XDEBUG_MODE: coverage
+          TEST_NAME: Scarlett
 
       - name: 📂 Sync folders and files to the server
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
