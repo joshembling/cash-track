@@ -15,8 +15,8 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: 🚚 Get latest code
-        uses: actions/checkout@v2
+      #- name: 🚚 Get latest code
+      #  uses: actions/checkout@v2
 
       - name: Use Node.js 16
         uses: actions/setup-node@v3
@@ -39,6 +39,14 @@ jobs:
       - name: 🚚 Install Composer Dependencies
         working-directory: ./
         run: composer install
+
+      - name: 🧪 Generate Application Key
+        working-directory: ./
+        run: php artisan key:generate --show
+
+      - name: 🧪 Set Application Key
+        run: |
+          echo "APP_KEY=${{ steps.generate-key.outputs.key }}" >> .env
 
       - name: 🧪 PHP Unit
         uses: php-actions/phpunit@v3
