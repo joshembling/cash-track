@@ -13,6 +13,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('recurring:expenses')->twiceDaily();
+        $schedule->command('non-recurring:expenses')->dailyAt('7:00');
     }
 
     /**

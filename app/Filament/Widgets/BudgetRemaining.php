@@ -12,6 +12,8 @@ class BudgetRemaining extends BarChartWidget
 {
     protected static ?string $heading = 'Budget Remaining';
 
+    protected static ?int $sort = 1;
+
     protected static ?array $options = [
         'plugins' => [
             'legend' => [
@@ -49,7 +51,7 @@ class BudgetRemaining extends BarChartWidget
                 [
                     'label' => 'Amount Remaining',
                     'data' => $data->map(fn (TrendValue $value) => auth()->user()->monthly_salary - $value->aggregate),
-                    'backgroundColor' => '#FAA0A0',
+                    'backgroundColor' => '#fdd9d9',
                 ],
             ],
             'labels' => $data->map(fn (TrendValue $value) => Carbon::parse($value->date)->format('M Y')),

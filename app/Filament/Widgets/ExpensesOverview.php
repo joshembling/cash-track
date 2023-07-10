@@ -13,6 +13,8 @@ class ExpensesOverview extends BarChartWidget
 {
     protected static ?string $heading = 'Expenses Overview';
 
+    protected static ?int $sort = 2;
+
     protected function getData(): array
     {
         $data = Trend::model(Expense::class)

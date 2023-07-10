@@ -105,7 +105,6 @@ class ExpenseResource extends Resource
 
                                 return 'I have received this expense';
                             })->hidden(fn (Closure $get) => $get('split') === false)
-                        //])->hidden(fn (Closure $get) => $get('split') === false),
                     ]),
 
                 Forms\Components\Fieldset::make('Categories')
@@ -120,9 +119,6 @@ class ExpenseResource extends Resource
                             ->preload()
                             ->multiple(),
                     ]),
-
-                //Forms\Components\Hidden::make('user_id')
-                //    ->dehydrateStateUsing(fn ($state) => auth()->user()->id),
             ]);
     }
 
