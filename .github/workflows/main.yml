@@ -39,7 +39,10 @@ jobs:
 
       - name: 🧪 Run tests
         working-directory: ./
-        run: vendor/bin/phpunit
+        run: |
+          ls ./tests  # Debugging: List the contents of the tests directory
+          ls ./tests/Unit  # Debugging: List the contents of the Unit test directory
+          vendor/bin/phpunit
 
       - name: 📂 Sync folders and files to the server
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
