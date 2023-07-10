@@ -41,8 +41,9 @@ jobs:
         run: composer install
 
       - name: 🧪 PHP Unit
-        working-directory: ./
         uses: php-actions/phpunit@v3
+        with:
+          working-directory: ./tests
 
       - name: 📂 Sync folders and files to the server
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
