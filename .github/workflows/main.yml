@@ -40,7 +40,7 @@ jobs:
         working-directory: ./
         run: composer install
 
-      - name: 🧪 Generate Application Key
+      - name: 🔑 Generate Application Key
         run: php artisan key:generate --show >> $GITHUB_ENV
 
       - name: 🧪 PHP Unit
@@ -49,7 +49,7 @@ jobs:
           php_extensions: xdebug
           bootstrap: vendor/autoload.php
           configuration: phpunit.xml
-          args: --coverage-text --env=testing
+          args: --coverage-text
         env:
           APP_KEY: ${{ env.testing.APP_KEY }}
           XDEBUG_MODE: coverage
