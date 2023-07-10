@@ -46,7 +46,6 @@ jobs:
         # The next step will be executed within the tests directory
         run: |
           ls  # Debugging: List the contents of the tests directory
-          ls ./Unit  # Debugging: List the contents of the Unit test directory
 
           # Execute php-actions/phpunit@v3 within the tests directory
           php-actions/phpunit@v3
