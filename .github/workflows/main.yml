@@ -38,10 +38,9 @@ jobs:
         run: composer install
 
       - name: 🧪 Run tests
-        working-directory: ./
         run: |
-          ls ./tests/Feature  # Debugging: List the contents of the tests directory
-          ls ./tests/Unit  # Debugging: List the contents of the Unit test directory
+          ls /tests/Feature  # Debugging: List the contents of the tests directory
+          ls /tests/Unit  # Debugging: List the contents of the Unit test directory
           vendor/bin/phpunit
 
       - name: 📂 Sync folders and files to the server
