@@ -5,9 +5,11 @@ namespace App\Filament\Resources\ExpenseResource\Pages;
 use App\Models\Expense;
 use Filament\Pages\Actions;
 use Filament\Resources\Form;
+use Filament\Pages\Actions\Action;
+use Illuminate\Database\Eloquent\Model;
 use Filament\Resources\Pages\EditRecord;
-use App\Filament\Resources\ExpenseResource;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\ExpenseResource;
 
 class EditExpense extends EditRecord
 {
@@ -16,7 +18,8 @@ class EditExpense extends EditRecord
     protected function getActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()
+                ->hidden(fn (Model $record) => $record->payee_id === auth()->user()->id),
         ];
     }
 
@@ -91,6 +94,16 @@ class EditExpense extends EditRecord
         }
 
         return $data;
+    }
+
+
+    protected function getCancelFormAction(): Action
+    {
+        return Action::make('cancel')
+            ->label('Go back')
+            ->icon('heroicon-s-arrow-sm-left')
+            ->url($this->previousUrl ?? static::getResource()::getUrl())
+            ->color('secondary');
     }
 
     public function splitPayment($amount, $percentage)
