@@ -40,7 +40,7 @@ jobs:
       - name: 🧪 Run tests
         working-directory: ./
         run: |
-          ls ./tests  # Debugging: List the contents of the tests directory
+          ls ./tests/Feature  # Debugging: List the contents of the tests directory
           ls ./tests/Unit  # Debugging: List the contents of the Unit test directory
           vendor/bin/phpunit
 
