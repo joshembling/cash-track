@@ -41,6 +41,7 @@ jobs:
         run: composer install
 
       - name: 🧪 PHP Unit
+        working-directory: ./
         uses: php-actions/phpunit@v3
 
       - name: 📂 Sync folders and files to the server
