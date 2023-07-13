@@ -87,17 +87,11 @@ class ExpenseResource extends Resource
                         Forms\Components\Select::make('split_percentage')
                             ->options([
                                 '50' => '50/50',
-                                'custom' => 'Custom'
+                                //'Other' => 'Other'
                             ])
                             ->hidden(fn (Closure $get) => !$get('split'))
                             ->required()
                             ->reactive(),
-                        Forms\Components\TextInput::make('split_amount')
-                            ->label('Amount owed')
-                            ->numeric()
-                            ->prefixIcon('heroicon-o-currency-pound')
-                            ->required()
-                            ->hidden(fn (Closure $get) => $get('split_percentage') !== 'custom'),
                         Forms\Components\Select::make('payee_id')
                             ->relationship('payee', 'name')
                             ->label('Split with')
@@ -122,8 +116,7 @@ class ExpenseResource extends Resource
                         Forms\Components\TextInput::make('split_amount')
                             ->prefixIcon('heroicon-o-currency-pound')
                             ->disabled()
-                            ->hidden(fn (Closure $get) => $get('split') === false)
-                            ->hiddenOn('create'),
+                            ->hidden(fn (Closure $get) => $get('split') === false),
                         Forms\Components\Toggle::make('payee_paid')
                             ->label(function (Closure $get, $record) {
                                 if ($record && $record->user_id !== auth()->user()->id) {

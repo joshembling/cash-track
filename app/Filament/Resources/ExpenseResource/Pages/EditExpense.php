@@ -59,32 +59,17 @@ class EditExpense extends EditRecord
                 }
             }
 
-            if ($this->record->split_percentage !== 'custom' || $data['split_percentage'] !== 'custom') {
-                if (!$this->record->payee_paid && $data['payee_paid']) {
-                    $data['amount'] = $this->splitPayment($data['original_amount'], $data['split_percentage'] ?? $this->record['split_percentage']);
+            if (!$this->record->payee_paid && $data['payee_paid']) {
+                $data['amount'] = $this->splitPayment($data['original_amount'], $data['split_percentage'] ?? $this->record['split_percentage']);
 
-                    $data['paid_at'] = now();
-                }
+                $data['paid_at'] = now();
+            }
 
-                if ($this->record->payee_paid && !$data['payee_paid']) {
-                    $data['amount'] = $this->revokePayment($data['original_amount'], $data['split_percentage'] ?? $this->record['split_percentage']);
-                    $data['split_amount'] = $this->splitPayment($data['original_amount'], $data['split_percentage'] ?? $this->record['split_percentage']);
+            if ($this->record->payee_paid && !$data['payee_paid']) {
+                $data['amount'] = $this->revokePayment($data['original_amount'], $data['split_percentage'] ?? $this->record['split_percentage']);
+                $data['split_amount'] = $this->splitPayment($data['original_amount'], $data['split_percentage'] ?? $this->record['split_percentage']);
 
-                    $data['paid_at'] = null;
-                }
-            } else {
-                if (!$this->record->payee_paid && $data['payee_paid']) {
-                    $data['amount'] = $this->splitPayment($data['original_amount'], $data['split_percentage'] ?? $this->record['split_percentage']);
-
-                    $data['paid_at'] = now();
-                }
-
-                if ($this->record->payee_paid && !$data['payee_paid']) {
-                    $data['amount'] = $this->revokePayment($data['original_amount'], $data['split_percentage'] ?? $this->record['split_percentage']);
-                    $data['split_amount'] = $this->splitPayment($data['original_amount'], $data['split_percentage'] ?? $this->record['split_percentage']);
-
-                    $data['paid_at'] = null;
-                }
+                $data['paid_at'] = null;
             }
         }
 
@@ -134,11 +119,4 @@ class EditExpense extends EditRecord
         $res = $amount;
         return number_format((float) $res, 2, '.', '');
     }
-
-    //public function calculateCustomPaymentRemaining($fullAmount, $customAmount)
-    //{
-    //    if( $fullAmount > $customAmount) {
-    //        $fullAmount - $customAmount
-    //    }
-    //}
 }
