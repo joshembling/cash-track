@@ -18,7 +18,12 @@ class OutstandingExpenses extends BaseWidget
 
     protected function getTableQuery(): Builder
     {
-        return Expense::query()->whereNull('paid_at');
+        return Expense::query()
+            ->where(function ($query) {
+                $query->where('user_id', auth()->user()->id)
+                    ->orWhere('payee_id', auth()->user()->id);
+            })
+            ->whereNull('paid_at');
     }
 
     protected function getTableColumns(): array

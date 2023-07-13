@@ -17,7 +17,11 @@ class ExpensesOverview extends BarChartWidget
 
     protected function getData(): array
     {
-        $data = Trend::model(Expense::class)
+        $data = Trend::query(
+            Expense::query()
+                ->where('user_id', auth()->user()->id)
+                ->orWhere('payee_id', auth()->user()->id)
+        )
             ->between(
                 start: now()->subMonths(2),
                 end: now(),

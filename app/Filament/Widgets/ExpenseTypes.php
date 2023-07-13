@@ -15,7 +15,10 @@ class ExpenseTypes extends PieChartWidget
 
     protected function getData(): array
     {
-        $data = Expense::with('tags')->get();
+        $data = Expense::with('tags')
+            ->where('user_id', auth()->user()->id)
+            ->orWhere('payee_id', auth()->user()->id)
+            ->get();
 
         if ($data->isNotEmpty()) {
             foreach ($data as $expense) {
