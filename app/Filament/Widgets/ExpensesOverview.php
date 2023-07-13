@@ -3,7 +3,6 @@
 namespace App\Filament\Widgets;
 
 use Carbon\Carbon;
-use App\Models\User;
 use App\Models\Expense;
 use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;

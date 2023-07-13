@@ -70,29 +70,31 @@ class OutstandingExpenses extends BaseWidget
     {
         return [
             Tables\Actions\EditAction::make(),
+            Tables\Actions\Action::make('edit')
+                ->url(fn ($record): string => route('filament.resources.expenses.edit', ['record' => $record])),
         ];
     }
 
     protected function getTableBulkActions(): array
     {
         return [
-            Tables\Actions\BulkAction::make('mark_as_paid')
-                ->icon('heroicon-s-shield-check')
-                ->action(fn (Collection $records) => $records->where('paid_at', null)
-                    ->each(function ($record) {
-                        $record->update([
-                            'paid_at' => now()
-                        ]);
-                    })),
-            Tables\Actions\BulkAction::make('mark_as_unpaid')
-                ->icon('heroicon-s-x-circle')
-                ->action(fn (Collection $records) => $records
-                    ->each(function ($record) {
-                        $record->update([
-                            'paid_at' => null
-                        ]);
-                    })),
-            Tables\Actions\DeleteBulkAction::make(),
+            //Tables\Actions\BulkAction::make('mark_as_paid')
+            //    ->icon('heroicon-s-shield-check')
+            //    ->action(fn (Collection $records) => $records->where('paid_at', null)
+            //        ->each(function ($record) {
+            //            $record->update([
+            //                'paid_at' => now()
+            //            ]);
+            //        })),
+            //Tables\Actions\BulkAction::make('mark_as_unpaid')
+            //    ->icon('heroicon-s-x-circle')
+            //    ->action(fn (Collection $records) => $records
+            //        ->each(function ($record) {
+            //            $record->update([
+            //                'paid_at' => null
+            //            ]);
+            //        })),
+            //Tables\Actions\DeleteBulkAction::make(),
         ];
     }
 }
