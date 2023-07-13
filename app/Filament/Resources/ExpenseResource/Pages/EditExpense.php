@@ -113,7 +113,7 @@ class EditExpense extends EditRecord
 
     public function splitPayment($amount, $percentage)
     {
-        $res = $amount - (($percentage / 100) * 100);
+        $res = $amount * ($percentage / 100);
 
         return number_format((float) $res, 2, '.', '');
     }
