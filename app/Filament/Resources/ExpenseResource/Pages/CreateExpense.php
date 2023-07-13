@@ -19,13 +19,17 @@ class CreateExpense extends CreateRecord
 
         $data['original_amount'] = $data['amount'];
 
+        //dd($data);
+
         if (
             array_key_exists('amount', $data) &&
             array_key_exists('split_percentage', $data) &&
-            $data['split_percentage'] !== 'Other' &&
+            $data['split_percentage'] == '50' &&
             $data['split'] === true
         ) {
             $data['split_amount'] = $this->splitPayment($data['amount'], $data['split_percentage']);
+        } else if (array_key_exists('split_percentage', $data) && $data['split_percentage'] == 'custom') {
+            $data['split_amount'] = number_format((float) $data['split_amount'], 2, '.', '');
         } else {
             $data['payee_id'] = null;
             $data['split_percentage'] = null;
