@@ -27,6 +27,8 @@ class EditExpense extends EditRecord
     {
         // if original user
         if ($this->record->user_id === auth()->user()->id) {
+
+            // modifying original amount
             if (array_key_exists('original_amount', $data) && $data['original_amount'] !== $this->record['original_amount']) {
                 $data['amount'] = $data['original_amount'];
                 $data['split_amount'] = $this->splitPayment($data['original_amount'], $data['split_percentage']);
@@ -45,12 +47,14 @@ class EditExpense extends EditRecord
         }
 
         if (array_key_exists('payee_paid', $data)) {
+
+            // payee_paid in db
             if (
                 $this->record->payee_paid &&
                 $data['payee_paid'] &&
                 array_key_exists('original_amount', $data)
             ) {
-                if ($data['original_amount'] === $this->record['original_amount']) {
+                if ($data['original_amount'] === $this->record['original_amount'] && $data['split_percentage'] !== 50) {
                     $data['amount'] = $this->record['amount'];
                 } elseif ($data['original_amount'] !== $this->record['original_amount']) {
                     $data['amount'] = $this->splitPayment($data['original_amount'], $data['split_percentage']);
@@ -59,6 +63,7 @@ class EditExpense extends EditRecord
                 }
             }
 
+            // just switched to paid
             if (!$this->record->payee_paid && $data['payee_paid']) {
                 $data['amount'] = $this->splitPayment($data['original_amount'], $data['split_percentage'] ?? $this->record['split_percentage']);
 
@@ -108,7 +113,7 @@ class EditExpense extends EditRecord
 
     public function splitPayment($amount, $percentage)
     {
-        $res = $amount * ($percentage / 100);
+        $res = $amount - (($percentage / 100) * 100);
 
         return number_format((float) $res, 2, '.', '');
     }
